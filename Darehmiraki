@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>ماشین حساب اپل</title>
+    <!-- لینک آیکن آنلاین جدید شبیه ماشین حساب اپل -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/892/892632.png">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            direction: rtl;
+            overflow: hidden;
+        }
+        .calculator {
+            background-color: #000;
+            width: 90vw;
+            max-width: 320px;
+            padding: 5vw;
+            border-radius: 10vw;
+            box-shadow: 0 5vw 10vw rgba(0, 0, 0, 0.5);
+        }
+        .display {
+            color: #fff;
+            font-size: 10vw;
+            text-align: right;
+            padding: 5vw;
+            margin-bottom: 5vw;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5vw;
+            backdrop-filter: blur(1vw);
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: 300;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2vw;
+        }
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 15vw;
+            height: 15vw;
+            font-size: 6vw;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+        button:hover {
+            background-color: #4a4a4a;
+            transform: translateY(-0.5vw);
+        }
+        button:active {
+            background-color: #222;
+            transform: scale(0.95);
+            box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.5);
+        }
+        .gray {
+            background-color: #a5a5a5;
+            color: #000;
+        }
+        .gray:hover {
+            background-color: #b8b8b8;
+        }
+        .gray:active {
+            background-color: #909090;
+        }
+        .orange {
+            background-color: #ff9500;
+        }
+        .orange:hover {
+            background-color: #ffaa33;
+        }
+        .orange:active {
+            background-color: #e08700;
+        }
+        .zero {
+            grid-column: span 2;
+            width: 32vw;
+            border-radius: 8vw;
+            text-align: left;
+            padding-left: 5vw;
+        }
+        .zero:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="gray" onclick="clearDisplay()">AC</button>
+            <button class="gray" onclick="toggleSign()">±</button>
+            <button class="gray" onclick="percent()">%</button>
+            <button class="orange" onclick="appendOperator('/')">÷</button>
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="orange" onclick="appendOperator('*')">×</button>
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="orange" onclick="appendOperator('-')">−</button>
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button class="orange" onclick="appendOperator('+')">+</button>
+            <button class="zero" onclick="appendNumber('0')">0</button>
+            <button onclick="appendNumber('.')">.</button>
+            <button class="orange" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentInput = '0';
+        let previousInput = '';
+        let operation = null;
+
+        function appendNumber(number) {
+            if (currentInput === '0') {
+                currentInput = number;
+            } else {
+                currentInput += number;
+            }
+            display.innerText = currentInput;
+        }
+
+        function appendOperator(operator) {
+            if (operation) {
+                calculate();
+            }
+            previousInput = currentInput;
+            currentInput = '0';
+            operation = operator;
+        }
+
+        function clearDisplay() {
+            currentInput = '0';
+            previousInput = '';
+            operation = null;
+            display.innerText = '0';
+        }
+
+        function toggleSign() {
+            currentInput = (parseFloat(currentInput) * -1).toString();
+            display.innerText = currentInput;
+        }
+
+        function percent() {
+            currentInput = (parseFloat(currentInput) / 100).toString();
+            display.innerText = currentInput;
+        }
+
+        function calculate() {
+            if (!operation) return;
+            let result;
+            const prev = parseFloat(previousInput);
+            const curr = parseFloat(currentInput);
+            switch (operation) {
+                case '+':
+                    result = prev + curr;
+                    break;
+                case '−':
+                    result = prev - curr;
+                    break;
+                case '*':
+                    result = prev * curr;
+                    break;
+                case '/':
+                    result = prev / curr;
+                    break;
+                default:
+                    return;
+            }
+            currentInput = result.toString();
+            operation = null;
+            previousInput = '';
+            display.innerText = currentInput;
+        }
+    </script>
+</body>
+</html>
